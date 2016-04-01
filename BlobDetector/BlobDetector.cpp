@@ -1,11 +1,9 @@
-﻿#include <iostream>
+﻿
+#include <iostream>
 using namespace std;
 
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/highgui/highgui.hpp"  
-using namespace cv;
-
 #include "BlobDetector.h"
+#include "common.h"
 
 BlobDetector::BlobDetector():m_Maxinone(10),nFrmNum(0),m_NextBlobID(0){
 
@@ -16,7 +14,7 @@ BlobDetector::BlobDetector():m_Maxinone(10),nFrmNum(0),m_NextBlobID(0){
 void BlobDetector::Create(Mat &Source,const Size S)
 {
 	BlobDetector();
-	m_FrImg=Source;
+//	m_FrImg=Source;
 	m_SourceSize=S;
 }
 
@@ -26,20 +24,19 @@ void BlobDetector::Create(Mat &Source,const Size S)
 void BlobDetector::TempGetBlobByID(int BlobID)
 { 
 	//临时使用一个vector来记录运行信息，当找到符合ID号的团块便加入到列表中
-	SameblobList.clear();
-	for(vector<int>::size_type i=0; i<HistoryBlobList.size(); i++)
-		//for(vector<int>::size_type i=0; i<ProcBlobList.size(); i++)
+    SameblobList.clear();
+    for(vector<int>::size_type i=0; i<HistoryBlobList.size(); i++)
         if(BlobID == HistoryBlobList.at(i).getID()){
-			CarInfo *pB=&HistoryBlobList.at(i);
-			SameblobList.push_back(*pB);
-		}
+            CarInfo *pB=&HistoryBlobList.at(i);
+            SameblobList.push_back(*pB);
+        }
 }
 
 //--------------------【BlobDetector::DetectFrBlob函数】---------------------------
 //  描述：准备1个单通道的前景图像pIB用查找轮廓，只提取最大的10个轮廓，
 //其余太小的舍去
 //----------------------------------------------------------------------------------------------
-void BlobDetector::DetectFrBlob(){
+void BlobDetector::DetectFrBlob(const Mat &m_FrImg){
 	//准备数据
 	m_BlobListNow.clear();
 	Mat pIB (m_SourceSize,CV_8UC1);
@@ -51,6 +48,7 @@ void BlobDetector::DetectFrBlob(){
 	//从二值图像中检索轮廓，存储轮廓容器contours 并返回检测到的轮廓头指针
 	//findContour设置轮廓的大小 CV_RETR_EXTERNAL为检测方式，只是找出最大的外轮廓
 	findContours( pIB,contours,  CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
+
 
 	//接下来就是对每一个轮廓的坐标长宽，作为团块存储
 	for(vector<int>::size_type i=0; i<contours.size(); i++)
@@ -163,12 +161,14 @@ void BlobDetector::DetectANamedNewBlob(){
 //-----------------------------------------------------------------------------------------------
 void BlobDetector::Process(const Mat &FrMask){
 	//检测当前团块DetectFrBlob
-	m_FrImg=FrMask;
-	DetectFrBlob();
-	
+    //m_FrImg=FrMask;
+
+    DetectFrBlob(FrMask);
+
 	if(nFrmNum==0){
 		m_BlobListOld=m_BlobListNow;
 	}
+
 	//比较pNowBlobList和pOldBlobList，将相同的团块ID统一，pNewBlobList指向新团块
 	DetectANamedNewBlob();
 	//***************************团块处理开始********************************
@@ -259,6 +259,7 @@ void BlobDetector::Sort(){
 		ProcblobList.push_back(SameblobList);
 	}
 }
+
 
 //---------------------【BlobDetector::GetBlobByID函数】----------------------------  
 //  描述：可以调用这个函数得到某一个ID的所有信息，使用之前至少要运行

@@ -8,7 +8,7 @@ class BlobDetector{
 
 	//数据
 private:
-	Mat m_FrImg;
+    //Mat m_FrImg;
 	vector<CarInfo> m_BlobListOld;//前一帧的团块
 	vector<CarInfo> m_BlobListNow;//当前帧的团块
 	vector<CarInfo> HistoryBlobList;//所有有记录的团块
@@ -25,7 +25,7 @@ private:
 
 private:
 	//算法运行时所要使用到的方法
-	void DetectFrBlob();
+    void DetectFrBlob(const Mat &m_FrImg);
 	void DetectANamedNewBlob();
 	void TempGetBlobByID(int BlobID);
 	

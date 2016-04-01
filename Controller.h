@@ -8,8 +8,8 @@ using namespace std;
 
 #include "CarInfo.h"
 #include "videoinfo.h"
-#include "FGDetector/FGDetector.h"
-#include "FGDetector/SimpleFGDetector.h"
+//#include "FGDetector/FGDetector.h"
+#include "FGDetector/ocvfgdetector.h"
 //#include "FGDetector/VibeFGDetector.h"
 #include "BlobDetector/BlobDetector.h"
 
@@ -23,7 +23,7 @@ private:
     BlobDetector *BD;
 
     //--------------数据----------------------
-    VideoInfo*m_SourceCap;
+    VideoInfo* m_SourceCap;
 
     int nFrmNum;//运行时的当前帧
 

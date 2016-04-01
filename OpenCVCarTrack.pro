@@ -15,19 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp \
         mainwindow.cpp \
     FGDetector/FGDetector.cpp \
-    FGDetector/SimpleFGDetector.cpp \
     BlobDetector/BlobDetector.cpp \
     Controller.cpp \
-    videoinfo.cpp
+    videoinfo.cpp \
+    FGDetector/ocvfgdetector.cpp
 
 HEADERS  += mainwindow.h \
     CarInfo.h \
     FGDetector/FGDetector.h \
-    FGDetector/SimpleFGDetector.h \
     BlobDetector/BlobDetector.h \
     Controller.h \
     videoinfo.h \
-    common.h
+    common.h \
+    FGDetector/ocvfgdetector.h
 
 FORMS    += mainwindow.ui
 

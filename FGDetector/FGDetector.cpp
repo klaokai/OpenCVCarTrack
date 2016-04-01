@@ -2,6 +2,6 @@
 //-------------------------【VibeFGDetector::GetMask函数】---------------------------------
 //  描述：获得处理后的前景图片
 //-----------------------------------------------------------------------------------------------
-Mat FGDetector::GetMask(){
-	return m_FrImg.clone();
+const Mat FGDetector::GetMask(){
+    return m_FrImg;
 }

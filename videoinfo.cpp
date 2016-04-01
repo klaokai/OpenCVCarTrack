@@ -20,7 +20,13 @@ VideoInfo::VideoInfo(QString videoFile)
 #ifdef QT_DEBUG
         qDebug() <<"整个视频共" << m_totalFrameNumber << "帧\n"<< "帧率为:" << m_rate <<  "帧/秒\n" << "大小为:"  << m_size.width <<'*'<<m_size.height;
 #endif
+        m_delay=1000/m_rate;
     }
+}
+
+VideoInfo::~VideoInfo()
+{
+     m_Capture.release();
 }
 
 double VideoInfo::GetRate() const{
@@ -37,16 +43,17 @@ bool VideoInfo::GetNextFrame(Mat &Img){
 
 QImage VideoInfo::Mat2QImage(Mat &image)
 {
-
     QImage img;
 
     if (image.channels()==3) {
+        //3通道
         cvtColor(image, image, CV_BGR2RGB);
         img = QImage((const unsigned char *)(image.data), image.cols, image.rows,
                      image.cols*image.channels(), QImage::Format_RGB888);
     } else if (image.channels()==1) {
+        //单通道
         img = QImage((const unsigned char *)(image.data), image.cols, image.rows,
-                     image.cols*image.channels(), QImage::Format_ARGB32);
+                     image.cols*image.channels(), QImage::Format_Indexed8);
     } else {
         img = QImage((const unsigned char *)(image.data), image.cols, image.rows,
                      image.cols*image.channels(), QImage::Format_RGB888);
@@ -55,7 +62,13 @@ QImage VideoInfo::Mat2QImage(Mat &image)
     return img;
 }
 
-long VideoInfo::GetTotalFrameNumber() const
+
+double VideoInfo::GetDelay() const
+{
+    return m_delay;
+}
+
+int VideoInfo::GetTotalFrameNumber() const
 {
     return m_totalFrameNumber;
 }

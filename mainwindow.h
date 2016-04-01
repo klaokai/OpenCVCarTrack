@@ -31,7 +31,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    Controller CarTrack;
+    Controller* CarTrack;
 };
 
 #endif // MAINWINDOW_H
