@@ -8,10 +8,10 @@ using namespace std;
 
 #include "CarInfo.h"
 #include "videoinfo.h"
-//#include "FGDetector/FGDetector.h"
+
 #include "FGDetector/ocvfgdetector.h"
-//#include "FGDetector/VibeFGDetector.h"
 #include "BlobDetector/BlobDetector.h"
+#include "BlobTracker/blobtracker.h"
 
 class Controller:public QObject
 {
@@ -19,13 +19,14 @@ class Controller:public QObject
 
 private:
     //--------------算法类--------------------
-    FGDetector *FGD;
-    BlobDetector *BD;
+    FGDetector * FGD;
+    BlobDetector * BD;
+    BlobTracker *BT;
 
     //--------------数据----------------------
-    VideoInfo* m_SourceCap;
+    VideoInfo * m_SourceCap;
 
-    int nFrmNum;//运行时的当前帧
+    int nFrmNum=0;//运行时的当前帧
 
 
 signals:
@@ -36,6 +37,7 @@ public:
     //主要函数
     void create(QString videoFilePath);
     void Process();
+    QString GetResult();
     Controller();
     ~Controller();
 };

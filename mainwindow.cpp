@@ -25,12 +25,10 @@ void MainWindow::on_OpenImageButton_clicked()
     QMessageBox::information(NULL, tr("路径"), tr("您选择:\n") + fileName);
     CarTrack->create(fileName);
     CarTrack->Process();
+    QMessageBox::information(NULL, tr("结果"), CarTrack->GetResult());
 }
 
 void MainWindow::ShowResult(Mat pImg){
-    //cvtColor(pImg,pImg,CV_BGR2RGB);
-    //QImage img=QImage((const unsigned char*)(pImg.data),pImg.cols,pImg.rows,QImage::Format_RGB888);
-    //QImage img=VideoInfo::Mat2QImage (pImg);
     ui->label->setPixmap(QPixmap::fromImage(VideoInfo::Mat2QImage (pImg)));
     ui->label->resize(ui->label->pixmap()->size());
 }

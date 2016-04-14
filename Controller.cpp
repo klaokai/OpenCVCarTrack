@@ -4,6 +4,7 @@ Controller::Controller()
 {
     FGD=new OCVFGDetector();//这里改动可以变换处理
     BD=new BlobDetector();
+    BT=new BlobTracker();
 }
 
 void Controller::create(QString videoFilePath){
@@ -15,19 +16,20 @@ void Controller::create(QString videoFilePath){
 //-----------------------------------------------------------------------------------------------  
 void  Controller::Process ()
 {
-    namedWindow ("IMG");
+    namedWindow ("前景");
+    moveWindow ("前景",20,30);
     //播放控制参数
     Mat  pImg;
     if(!m_SourceCap->GetNextFrame(pImg))
         return;
     FGD->Create(pImg);
-    //BD->Create(pImg,m_SourceCap->GetSize ());
+    BD->Create(m_SourceCap->GetSize ());
     nFrmNum=1;
     while(m_SourceCap->GetNextFrame(pImg))
     {
         nFrmNum++;
 #ifdef QT_DEBUG
-        qDebug()<<"运行到"<<nFrmNum<<"帧";
+        //qDebug()<<"运行到"<<nFrmNum<<"帧";
 #endif
 
         FGD->Process(pImg);//前景处理
@@ -36,11 +38,10 @@ void  Controller::Process ()
             if ( FGD->GetMask().data == NULL ){
                 throw "没有获得图像掩膜";
             }
-//            BD->Process(FGD->GetMask());//团块处理
-//            BD->Draw(pImg);//绘图处理
-            imshow("IMG",FGD->GetMask());
-            //emit ShowVideo(BD->GetResult());
-            emit ShowVideo(FGD->GetMask());
+            BD->Process(FGD->GetMask());//团块处理
+            BD->Draw(pImg);//绘图处理
+            imshow("前景",FGD->GetMask());
+            emit ShowVideo(BD->GetResult());
         }
         catch ( string a ){
             cout << a;
@@ -55,15 +56,24 @@ void  Controller::Process ()
         cv::waitKey (m_SourceCap->GetDelay ());
     }
 
-    //BD->Sort();//用来整理得到的车辆数据
+    BD->Sort();//用来整理得到的车辆数据
+    BT->SetProbList (BD->getProcblobList ());
+    BT->SetTimeParameter((m_SourceCap->GetTotalFrameNumber()/m_SourceCap->GetRate()));
+    BT->ShowProbList ();
 #ifdef QT_DEBUG
-    qDebug()<<"运行完毕";
+    qDebug()<<"运行完毕"<<(BT->GetResult());
 #endif
     cv::destroyAllWindows ();
 }
 
+QString Controller::GetResult()
+{
+    return BT->GetResult();
+}
+
 Controller::~Controller()
 {
+    delete BT;
     delete BD;
     delete FGD;
     delete m_SourceCap;

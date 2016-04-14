@@ -20,6 +20,7 @@ OCVFGDetector::~OCVFGDetector()
  */
 void OCVFGDetector::Create(const Mat &Source )
 {
+    assert(!Source.empty ());
 }
 
 /**

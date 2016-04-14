@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     BlobDetector/BlobDetector.cpp \
     Controller.cpp \
     videoinfo.cpp \
-    FGDetector/ocvfgdetector.cpp
+    FGDetector/ocvfgdetector.cpp \
+    BlobTracker/blobtracker.cpp
 
 HEADERS  += mainwindow.h \
     CarInfo.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     Controller.h \
     videoinfo.h \
     common.h \
-    FGDetector/ocvfgdetector.h
+    FGDetector/ocvfgdetector.h \
+    BlobTracker/blobtracker.h
 
 FORMS    += mainwindow.ui
 
